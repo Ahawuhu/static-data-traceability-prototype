@@ -1,0 +1,1 @@
+.sheet-tools{display:flex;align-items:center;gap:10px}.sheet-tools #addInfoBtn,.sheet-tools #projectEditBtn{height:36px;white-space:nowrap}.sheet-tools #addInfoBtn svg,.sheet-tools #projectEditBtn svg{width:15px}.edit-fields .required-label:after{content:"*";color:var(--danger);margin-left:3px}.category-toolbar p{display:none}.link-btn.delete-row{color:var(--danger)}

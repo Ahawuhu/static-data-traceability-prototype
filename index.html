@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>智慧城科技 - 数据溯源</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="enhancements.css">
+  <link rel="stylesheet" href="panel-style.css">
+  <link rel="stylesheet" href="collapse-style.css">
+  <link rel="stylesheet" href="table-sections.css?v=20260729-2">
+  <link rel="stylesheet" href="add-info.css?v=20260729-2">
+  <link rel="stylesheet" href="sync-data.css">
+  <link rel="stylesheet" href="dashboard.css?v=20260729-3">
+  <style>.work-tab:not(.selected){color:#263445}</style>
+  <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js"></script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand"><div class="brand-mark">W</div><div><strong>智慧城科技</strong><span>WISDOM CITY TECHNOLOGY</span></div></div>
+      <button class="icon-btn sidebar-toggle" aria-label="收起菜单" title="收起菜单"><i data-lucide="panel-left-close"></i></button>
+      <div class="top-actions">
+        <button class="top-link">费用<sup>NEW</sup></button><button class="top-link">短信服务<sup>NEW</sup></button>
+        <button class="icon-btn" aria-label="下载" title="下载"><i data-lucide="download"></i></button>
+        <button class="icon-btn" aria-label="全屏" title="全屏"><i data-lucide="maximize"></i></button>
+        <button class="icon-btn" aria-label="通知" title="通知"><i data-lucide="bell"></i><span class="dot"></span></button>
+        <button class="icon-btn" aria-label="刷新" title="刷新" id="refreshBtn"><i data-lucide="refresh-cw"></i></button>
+        <div class="user"><span>张志宣</span><div class="avatar"><i data-lucide="user"></i></div><i data-lucide="chevron-down"></i></div>
+      </div>
+    </header>
+    <aside class="sidebar">
+      <div class="menu-search"><i data-lucide="search"></i><input aria-label="菜单搜索" placeholder="菜单搜索"></div>
+      <nav>
+        <a><i data-lucide="house"></i><span>首页</span></a>
+        <a><i data-lucide="building-2"></i><span>企业管理</span><i data-lucide="chevron-down" class="chevron"></i></a>
+        <div class="nav-group open"><div class="nav-title"><i data-lucide="archive"></i><span>资产管理</span><i data-lucide="chevron-up" class="chevron"></i></div><a class="sub active"><span>数据溯源</span></a><a class="sub"><span>片区管理</span></a><a class="sub"><span>项目管理</span></a><a class="sub"><span>车场管理</span></a></div>
+        <a><i data-lucide="users"></i><span>住户管理</span></a><a><i data-lucide="gauge"></i><span>仪表管理</span></a><a><i data-lucide="table-2"></i><span>公共表管理</span></a><a><i data-lucide="settings"></i><span>智能管理</span></a>
+        <a><i data-lucide="chart-no-axes-combined"></i><span>增值经营</span><i data-lucide="chevron-down" class="chevron"></i></a><a><i data-lucide="heart"></i><span>物业服务</span><i data-lucide="chevron-down" class="chevron"></i></a>
+      </nav>
+    </aside>
+    <main class="workspace">
+      <div class="tabs"><div>操控台</div><div class="selected">数据管理 <button aria-label="关闭页签">×</button></div></div>
+      <div class="page-wrap">
+        <div class="module-tabs"><button class="work-tab" data-page="dashboard">数据看板</button><button class="work-tab selected" data-page="trace">数据溯源</button></div>
+        <section class="panel dashboard hidden" id="dashboardView">
+          <div class="panel-heading dashboard-heading"><div><h1>数据看板</h1><p id="dashboardScopeText">智慧城科技 · 企业维度</p></div><div class="dashboard-date"><i data-lucide="calendar-days"></i>数据更新至 2026-07-28</div></div>
+          <div class="dashboard-control-bar"><div class="dashboard-mode-switch" role="tablist" aria-label="看板类型"><button class="active" data-dashboard-mode="completion" role="tab">完成情况监控</button><button data-dashboard-mode="content" role="tab">数据内容分析</button></div><div class="dashboard-scope-controls"><label>企业<select id="dashboardEnterprise"><option>智慧城科技</option></select></label><i data-lucide="chevron-right"></i><label>区域<select id="dashboardRegion"><option value="">全部区域</option></select></label><i data-lucide="chevron-right"></i><label>公司<select id="dashboardCompany" disabled><option value="">全部公司</option></select></label></div></div>
+          <div class="dashboard-breadcrumb" id="dashboardBreadcrumb"></div>
+          <div id="dashboardBody"></div>
+        </section>
+        <div class="trace-layout" id="traceView">
+        <aside class="project-tree" id="projectTree"><div class="tree-head"><strong>数据导航</strong><button class="icon-btn tree-collapse" aria-label="收起数据导航" title="收起数据导航"><i data-lucide="panel-left-close"></i></button></div><div class="tree-search"><i data-lucide="search"></i><input id="treeSearch" placeholder="搜索片区或公司"></div><div class="tree-content" id="treeContent"></div></aside>
+        <div class="trace-content">
+        <section class="panel" id="listView">
+          <div class="panel-heading"><div><h1>数据溯源</h1><p>按小区统一查看和维护物业静态业务数据。</p></div><button class="primary" id="uploadBtn"><i data-lucide="upload"></i>数据上传</button></div>
+          <div class="filter-bar"><label><span>小区名称</span><div class="input-wrap"><i data-lucide="search"></i><input id="searchInput" placeholder="请输入小区名称"></div></label><label><span>所属区域</span><select id="regionFilter"><option value="">全部区域</option><option>海南北部区域</option><option>海甸区域</option></select></label><label><span>数据状态</span><select id="statusFilter"><option value="">全部状态</option><option>已完成</option><option>待补充</option></select></label><div class="filter-actions"><button class="primary" id="queryBtn">查询</button><button class="secondary" id="resetBtn">重置</button></div></div>
+          <div class="table-meta"><strong>小区数据清单</strong><span id="resultCount">共 4 个小区</span></div>
+          <div class="table-scroll"><table><thead><tr><th>小区名称</th><th>所属区域</th><th>数据分类</th><th>完整度</th><th>最后更新时间</th><th>更新人</th><th>状态</th><th>操作</th></tr></thead><tbody id="communityRows"></tbody></table></div>
+          <div class="pagination"><span>共 <b id="totalCount">4</b> 条</span><select><option>20 条/页</option></select><button disabled><i data-lucide="chevron-left"></i></button><button class="page-current">1</button><button disabled><i data-lucide="chevron-right"></i></button><span>前往</span><input value="1" aria-label="页码"><span>页</span></div>
+        </section>
+        <section class="panel hidden" id="detailView">
+          <div class="detail-title"><button class="icon-btn back" id="backBtn" aria-label="返回" title="返回"><i data-lucide="arrow-left"></i></button><div><div class="breadcrumb">数据溯源 / 小区数据详情</div><h1 id="detailName">蓝岛康城</h1></div><div class="detail-actions"><button class="secondary" id="downloadTemplateBtn"><i data-lucide="download"></i>下载模板</button><button class="secondary" id="detailUploadBtn"><i data-lucide="upload"></i>上传数据</button><button class="hidden" id="editBtn" aria-hidden="true" tabindex="-1">编辑数据</button></div></div>
+          <div class="summary" id="summary"></div>
+          <div class="category-tabs" id="categoryTabs"></div>
+          <div class="detail-data-layout" id="detailDataLayout"><aside class="sheet-nav"><div class="sheet-nav-title"><strong>表单目录</strong><span id="sheetCount"></span><button class="icon-btn sheet-collapse" aria-label="收起表单目录" title="收起表单目录"><i data-lucide="panel-left-close"></i></button></div><div id="sheetNav"></div></aside><div class="sheet-content"><div class="category-toolbar"><div class="sheet-heading"><h2 id="categoryTitle">财务类</h2><p id="categoryDesc"></p><div class="sheet-notes hidden" id="sheetNotes"></div></div><div class="sheet-tools"><div class="input-wrap table-search"><i data-lucide="search"></i><input id="recordSearch" placeholder="搜索当前表"></div><button class="secondary hidden" id="syncDataBtn"><i data-lucide="refresh-cw"></i>数据同步</button><button class="primary hidden" id="projectEditBtn"><i data-lucide="pencil"></i>编辑信息</button><button class="primary hidden" id="addInfoBtn"><i data-lucide="plus"></i>添加信息</button></div></div>
+          <div class="table-scroll"><table><thead><tr id="detailHead"></tr></thead><tbody id="detailRows"></tbody></table></div>
+          <div class="sheet-pagination"><span id="sheetResult"></span><button id="prevSheetPage" class="secondary">上一页</button><span id="sheetPage"></span><button id="nextSheetPage" class="secondary">下一页</button></div></div></div>
+          <div class="source-note"><i data-lucide="file-text"></i><div><strong>数据来源</strong><span id="sourceFile"></span></div><span class="source-status"><i data-lucide="circle-check"></i>已解析</span></div>
+        </section>
+        </div></div>
+      </div>
+    </main>
+  </div>
+  <div class="modal hidden" id="uploadModal" role="dialog" aria-modal="true" aria-labelledby="uploadTitle"><div class="modal-card"><div class="modal-head"><h2 id="uploadTitle">上传溯源数据</h2><button class="icon-btn close-modal" aria-label="关闭"><i data-lucide="x"></i></button></div><div class="modal-body"><div class="form-grid"><label>所属小区<select id="uploadCommunity"><option>蓝岛康城</option><option>蓝岛水岸</option><option>和风兰庭</option><option>幸福城</option></select></label><label>数据分类<select id="uploadCategory"><option>小区概况</option><option>财务类</option><option>环境类</option><option>客服类</option><option>行政类</option><option>设施设备类</option><option>秩序类</option></select></label></div><label class="dropzone" id="dropzone"><input type="file" id="fileInput" accept=".docx,.xlsx,.xls,.csv"><i data-lucide="cloud-upload"></i><strong>点击或将文件拖拽到此处上传</strong><span>支持 DOCX、XLSX、XLS、CSV，单个文件不超过 20MB</span></label><div id="filePreview" class="file-preview hidden"></div><label class="full-label">上传说明<textarea id="uploadNote" placeholder="请输入本次数据更新说明（选填）"></textarea></label></div><div class="modal-foot"><button class="secondary close-modal">取消</button><button class="primary" id="confirmUpload">开始上传</button></div></div></div>
+  <div class="modal hidden" id="editModal" role="dialog" aria-modal="true" aria-labelledby="editTitle"><div class="modal-card wide"><div class="modal-head"><h2 id="editTitle">编辑财务类数据</h2><button class="icon-btn close-edit" aria-label="关闭"><i data-lucide="x"></i></button></div><div class="modal-body"><div class="edit-hint"><i data-lucide="info"></i>编辑当前分类的已展示记录，保存后将更新小区数据状态和更新时间。</div><div id="editFields" class="edit-fields"></div></div><div class="modal-foot"><button class="secondary close-edit">取消</button><button class="primary" id="saveEdit">保存修改</button></div></div></div>
+  <div class="modal hidden" id="syncModal" role="dialog" aria-modal="true" aria-labelledby="syncTitle"><div class="modal-card sync-modal-card"><div class="modal-head"><div><h2 id="syncTitle">数据同步</h2><span id="syncSource"></span></div><button class="icon-btn close-sync" aria-label="关闭"><i data-lucide="x"></i></button></div><div class="modal-body"><div class="sync-hint"><i data-lucide="info"></i><span><strong>插入式同步</strong>选中的数据将作为新记录追加到当前表，不会覆盖或修改现有数据。</span></div><div class="sync-meta"><span id="syncAvailableCount"></span><label><input type="checkbox" id="syncSelectAll"> 全选可同步数据</label></div><div class="sync-table-scroll"><table><thead id="syncHead"></thead><tbody id="syncRows"></tbody></table></div></div><div class="modal-foot"><span id="syncSelectedCount">已选 0 条</span><button class="secondary close-sync">取消</button><button class="primary" id="confirmSync" disabled><i data-lucide="refresh-cw"></i>确认同步</button></div></div></div>
+  <div class="toast" id="toast"><i data-lucide="circle-check"></i><span></span></div>
+  <script src="trace-data.js?v=20260729-1"></script><script src="app.js?v=20260729-2"></script><script src="collapse.js"></script><script src="add-info.js?v=20260729-2"></script><script src="download-template.js"></script><script src="sync-data.js"></script><script src="dashboard.js?v=20260729-3"></script>
+</body>
+</html>

@@ -1,0 +1,18 @@
+.sheet-tools{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.sync-modal-card{width:min(1040px,calc(100vw - 40px))}
+.sync-modal-card .modal-head>div{display:grid;gap:2px}
+.sync-modal-card .modal-head span{font-size:12px;color:var(--muted)}
+.sync-hint{display:flex;align-items:flex-start;gap:9px;padding:12px 14px;border:1px solid #b9d8ff;background:#f3f8ff;color:#52677f}
+.sync-hint svg{width:18px;min-width:18px;color:var(--primary);margin-top:1px}
+.sync-hint span{display:grid;gap:2px;font-size:13px}
+.sync-hint strong{color:#315f96}
+.sync-meta{height:46px;display:flex;align-items:center;justify-content:space-between;color:var(--muted);font-size:13px}
+.sync-meta label{display:flex;align-items:center;gap:5px;cursor:pointer;color:var(--text)}
+.sync-table-scroll{max-height:390px;overflow:auto;border:1px solid var(--border)}
+.sync-table-scroll table{min-width:900px;font-size:12px}
+.sync-table-scroll th,.sync-table-scroll td{height:40px;padding:8px 10px;max-width:240px;overflow:hidden;text-overflow:ellipsis}
+.sync-table-scroll th:first-child,.sync-table-scroll td:first-child{position:sticky;left:0;width:46px;min-width:46px;text-align:center;z-index:1}
+.sync-table-scroll th:first-child{background:var(--head)}
+.sync-table-scroll td:first-child{background:#fff}
+.sync-modal-card .modal-foot>span{margin-right:auto;color:var(--muted);font-size:13px}
+.sync-modal-card #confirmSync:disabled{opacity:.5;cursor:not-allowed}
