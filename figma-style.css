@@ -7,18 +7,18 @@
 }
 
 body { background: var(--figma-bg); }
-.topbar { height: 76px; }
-.brand { width: 262px; padding: 0 20px; }
+.topbar { height: 68px; }
+.brand { width: 215px; padding: 0 18px; }
 .brand-mark { width: 42px; height: 46px; }
 .brand strong { font-size: 18px; }
-.sidebar { top: 76px; width: 262px; background: #17345a; }
-.workspace { padding: 76px 0 0 262px; }
+.sidebar { top: 68px; width: 215px; background: #17345a; }
+.workspace { padding: 68px 0 0 215px; }
 .tabs { height: 54px; }
 .tabs > div { height: 54px; }
 .page-wrap { padding: 16px 20px 24px; }
 .module-tabs { height: 50px; }
 .module-tabs .work-tab { height: 50px; min-width: 138px; }
-.trace-layout { grid-template-columns: 286px minmax(0, 1fr); gap: 16px; }
+.trace-layout { grid-template-columns: 302px minmax(0, 1fr); gap: 16px; }
 .project-tree { min-height: calc(100vh - 166px); }
 .tree-head { height: 64px; padding: 0 16px; font-size: 17px; }
 .tree-search { height: 64px; padding: 13px 16px; }
