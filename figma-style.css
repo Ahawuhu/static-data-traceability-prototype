@@ -1,0 +1,50 @@
+/* Figma 企业列表视觉规范覆盖层 */
+:root {
+  --figma-bg: #f3f6fa;
+  --figma-border: #dce4ee;
+  --figma-blue: #4d8ff3;
+  --figma-navy: #17345a;
+}
+
+body { background: var(--figma-bg); }
+.topbar { height: 76px; }
+.brand { width: 262px; padding: 0 20px; }
+.brand-mark { width: 42px; height: 46px; }
+.brand strong { font-size: 18px; }
+.sidebar { top: 76px; width: 262px; background: #17345a; }
+.workspace { padding: 76px 0 0 262px; }
+.tabs { height: 54px; }
+.tabs > div { height: 54px; }
+.page-wrap { padding: 16px 20px 24px; }
+.module-tabs { height: 50px; }
+.module-tabs .work-tab { height: 50px; min-width: 138px; }
+.trace-layout { grid-template-columns: 286px minmax(0, 1fr); gap: 16px; }
+.project-tree { min-height: calc(100vh - 166px); }
+.tree-head { height: 64px; padding: 0 16px; font-size: 17px; }
+.tree-search { height: 64px; padding: 13px 16px; }
+.tree-search input { height: 38px; }
+.trace-content > .panel { min-height: calc(100vh - 166px); }
+.panel-heading { min-height: 84px; padding: 18px 24px; }
+.panel-heading h1 { font-size: 17px; }
+.panel-heading p { font-size: 13px; color: #8996a6; }
+.primary, .secondary { height: 38px; border-radius: 3px; }
+.filter-bar { min-height: 78px; padding: 17px 24px; gap: 16px; background: #fff; }
+.filter-bar label { gap: 9px; }
+.filter-bar .input-wrap input { width: 204px; }
+.filter-bar select { min-width: 158px; }
+.table-meta { height: 44px; padding: 0 24px 12px; }
+.table-meta strong { font-size: 15px; }
+.table-scroll { margin: 0 24px; }
+.table-scroll table { min-width: 980px; }
+.table-scroll th { height: 46px; padding: 10px 13px; background: #e8eef6; }
+.table-scroll td { height: 48px; padding: 10px 13px; }
+.pagination { padding: 0 24px; }
+body.collapsed .brand { width: 76px; }
+body.collapsed .sidebar { width: 76px; }
+body.collapsed .workspace { padding-left: 76px; }
+@media (max-width: 1180px) {
+  .sidebar { width: 76px; }
+  .brand { width: 76px; }
+  .workspace { padding-left: 76px; }
+  .trace-layout { grid-template-columns: 230px minmax(0, 1fr); }
+}
