@@ -15,6 +15,19 @@ function refreshAddInfoButton() {
   projectEditButton.classList.toggle('hidden', currentSheet !== 0);
 }
 
+function addFieldMarkup(table, column, index) {
+  const required = new Set(table.required || []).has(index);
+  const marker = required ? '<b class="required-mark">*</b>' : '';
+  const isChoice = column.includes('设备名称') || column.includes('使用状态');
+  if (!isChoice) {
+    return `<label>${marker}${esc(column)}<input placeholder="请输入${esc(column)}" data-col="${index}" ${required ? 'data-required="true"' : ''}></label>`;
+  }
+  const values = table.rows.map(row => String(row[index] || '').trim()).filter(Boolean);
+  const defaults = column.includes('使用状态') ? ['在用', '停用', '故障', '正常', '报废'] : [];
+  const options = [...new Set([...values, ...defaults])].slice(0, 30);
+  return `<fieldset class="choice-field"><legend>${marker}${esc(column)}</legend><div class="choice-options">${options.map(option => `<label><input type="radio" name="add-field-${index}" value="${esc(option)}" data-col="${index}"><span>${esc(option)}</span></label>`).join('')}</div></fieldset>`;
+}
+
 renderSheet = function renderSheetWithAddButton() {
   originalRenderSheet();
   refreshAddInfoButton();
@@ -35,7 +48,7 @@ function openAddInfo() {
   document.querySelector('#editFields').dataset.mode = 'add';
   document.querySelector('#editFields').removeAttribute('data-row');
   document.querySelector('#editFields').innerHTML = visibleColumns
-    .map(column => `<label><span class="required-label">${esc(column.name)}</span><input placeholder="请输入${esc(column.name)}" data-col="${column.index}"></label>`)
+    .map(column => addFieldMarkup(table, column.name, column.index))
     .join('');
   document.querySelector('#editModal').classList.remove('hidden');
   if (window.lucide) lucide.createIcons();
@@ -230,15 +243,23 @@ document.querySelector('#saveEdit').onclick = () => {
   }
 
   if (mode === 'add') {
-    const inputs = [...fields.querySelectorAll('input')];
-    if (inputs.some(input => !input.value.trim())) {
-      toast('请完整填写新增信息');
+    const controls = [...fields.querySelectorAll('[data-col]')];
+    const values = {};
+    controls.forEach(control => {
+      const index = Number(control.dataset.col);
+      if (control.type === 'radio') {
+        if (control.checked) values[index] = control.value.trim();
+      } else values[index] = control.value.trim();
+    });
+    const required = new Set(table.required || []);
+    if ([...required].some(index => !String(values[index] || '').trim())) {
+      toast('请填写所有标红必填字段');
       return;
     }
     const row = Array(table.columns.length).fill('');
     const sourceSequenceIndex = table.columns.findIndex(name => name.trim() === '序号');
     if (sourceSequenceIndex >= 0) row[sourceSequenceIndex] = String(table.rows.length + 1);
-    inputs.forEach(input => { row[Number(input.dataset.col)] = input.value.trim(); });
+    Object.entries(values).forEach(([index, value]) => { row[Number(index)] = value; });
     table.rows.push(row);
     categories[currentCategory].rowCount += 1;
     sheetPage = Math.max(1, Math.ceil(table.rows.length / 30));
@@ -251,8 +272,20 @@ document.querySelector('#saveEdit').onclick = () => {
   }
 
   const rowIndex = Number(fields.dataset.row);
-  fields.querySelectorAll('input').forEach(input => {
-    table.rows[rowIndex][Number(input.dataset.col)] = input.value.trim() || '无';
+  const editValues = {};
+  fields.querySelectorAll('[data-col]').forEach(control => {
+    const index = Number(control.dataset.col);
+    if (control.type === 'radio') {
+      if (control.checked) editValues[index] = control.value.trim();
+    } else editValues[index] = control.value.trim();
+  });
+  const required = new Set(table.required || []);
+  if ([...required].some(index => !String(editValues[index] || '').trim())) {
+    toast('请填写所有标红必填字段');
+    return;
+  }
+  Object.entries(editValues).forEach(([index, value]) => {
+    table.rows[rowIndex][Number(index)] = value || '无';
   });
   currentCommunity.time = '2026-07-28 ' + new Date().toTimeString().slice(0, 5);
   currentCommunity.user = '张志宣';
