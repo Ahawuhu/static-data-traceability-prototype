@@ -139,6 +139,28 @@ def template_schemas(path):
         schemas.append((title, values[header_index]))
     return schemas
 
+def template_required(path):
+    """Return required header indexes based on red font or a leading asterisk."""
+    workbook = load_workbook(path, data_only=False, read_only=False)
+    required = []
+    for sheet in workbook.worksheets:
+        if sheet.title == '项目基本信息':
+            required.append([])
+            continue
+        header_row = 2
+        fields = []
+        for cell in sheet[header_row]:
+            value = clean(str(cell.value)) if cell.value is not None else ''
+            color = cell.font.color
+            rgb = (color.rgb or '') if color and color.type == 'rgb' else ''
+            red = len(rgb) == 8 and int(rgb[2:4], 16) >= 160 and int(rgb[4:6], 16) < 100 and int(rgb[6:8], 16) < 100
+            if value.startswith('*') or red:
+                fields.append(len(fields))
+            else:
+                fields.append(None)
+        required.append(fields)
+    return required
+
 # The original customer DOCX contains the community overview as its second table.
 # Split it into its own first category while preserving Blue Island's filled values.
 customer = result['客服类']
@@ -186,14 +208,16 @@ customer['rowCount'] = sum(len(table['rows']) for table in customer_tables)
 # to the template width so the rendered table cannot drift from its header.
 facility = result['设施设备类']
 facility_schemas = template_schemas(FACILITY_TEMPLATE)
+facility_required = template_required(FACILITY_TEMPLATE)
 facility_tables = facility['tables']
 if len(facility_tables) != len(facility_schemas):
     raise ValueError(f'设施设备类表数与新模板不一致: {len(facility_tables)} != {len(facility_schemas)}')
-for table, (name, columns) in zip(facility_tables[1:], facility_schemas[1:]):
+for table, (name, columns), required in zip(facility_tables[1:], facility_schemas[1:], facility_required[1:]):
     table['name'] = name
     if columns:
         width = len(columns)
-        table['columns'] = columns
+        table['columns'] = [column.lstrip('*').strip() for column in columns]
+        table['required'] = [index for index, marker in enumerate(required[:width]) if marker is not None]
         table['rows'] = [(row + [''] * width)[:width] for row in table['rows']]
 facility['file'] = FACILITY_TEMPLATE.name
 facility['rowCount'] = sum(len(table['rows']) for table in facility_tables)
