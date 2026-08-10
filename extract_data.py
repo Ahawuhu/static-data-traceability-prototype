@@ -13,6 +13,7 @@ OUTPUT = Path(__file__).with_name('trace-data.js')
 TEMPLATE_SOURCE = Path('/Users/zhixuanzhang/Desktop/智慧城/静态数据溯源/静态数据填写模板-新')
 CUSTOMER_TEMPLATE = TEMPLATE_SOURCE / '客服类_新.xlsx'
 OVERVIEW_TEMPLATE = TEMPLATE_SOURCE / '小区概况_新.xlsx'
+FACILITY_TEMPLATE = TEMPLATE_SOURCE / '设施设备类_新 260810xlsx.xlsx'
 CUSTOMER_HOUSE_TYPE_SOURCE = Path('/Users/zhixuanzhang/Desktop/智慧城/静态数据溯源/2026年静态溯源数据收集结果/北部区域项目静态数据业务填报/民航/用户上传_用户上传_已填写文档_民航公寓-客服类_1777014587925_0_e8zp_with_remarks.docx')
 
 def clean(value):
@@ -179,6 +180,23 @@ house_type_table['sourceFile'] = CUSTOMER_HOUSE_TYPE_SOURCE.name
 customer['file'] = CUSTOMER_TEMPLATE.name
 customer['tables'] = customer_tables
 customer['rowCount'] = sum(len(table['rows']) for table in customer_tables)
+
+# The facility workbook is the authoritative field definition for all facility tables.
+# Keep the existing filled values where positions match, while normalizing every row
+# to the template width so the rendered table cannot drift from its header.
+facility = result['设施设备类']
+facility_schemas = template_schemas(FACILITY_TEMPLATE)
+facility_tables = facility['tables']
+if len(facility_tables) != len(facility_schemas):
+    raise ValueError(f'设施设备类表数与新模板不一致: {len(facility_tables)} != {len(facility_schemas)}')
+for table, (name, columns) in zip(facility_tables[1:], facility_schemas[1:]):
+    table['name'] = name
+    if columns:
+        width = len(columns)
+        table['columns'] = columns
+        table['rows'] = [(row + [''] * width)[:width] for row in table['rows']]
+facility['file'] = FACILITY_TEMPLATE.name
+facility['rowCount'] = sum(len(table['rows']) for table in facility_tables)
 overview = {
     'file': OVERVIEW_TEMPLATE.name,
     'tables': overview_tables,
