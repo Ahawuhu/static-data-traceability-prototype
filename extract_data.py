@@ -161,6 +161,31 @@ def template_required(path):
         required.append(fields)
     return required
 
+def template_field_types(path):
+    """Return the form control type for each template column.
+
+    The facility template currently defines the two single-choice controls by
+    their column names. All other columns remain free-text controls so the
+    prototype stays aligned with the workbook headers without inventing
+    validation rules that are not present in the source file.
+    """
+    workbook = load_workbook(path, data_only=True, read_only=True)
+    field_types = []
+    for sheet in workbook.worksheets:
+        if sheet.title == '项目基本信息':
+            field_types.append([])
+            continue
+        header_row = 2
+        types = []
+        for cell in sheet[header_row]:
+            value = clean(str(cell.value)) if cell.value is not None else ''
+            if '设备名称' in value or '使用状态' in value:
+                types.append('radio')
+            else:
+                types.append('text')
+        field_types.append(types)
+    return field_types
+
 # The original customer DOCX contains the community overview as its second table.
 # Split it into its own first category while preserving Blue Island's filled values.
 customer = result['客服类']
@@ -209,15 +234,22 @@ customer['rowCount'] = sum(len(table['rows']) for table in customer_tables)
 facility = result['设施设备类']
 facility_schemas = template_schemas(FACILITY_TEMPLATE)
 facility_required = template_required(FACILITY_TEMPLATE)
+facility_field_types = template_field_types(FACILITY_TEMPLATE)
 facility_tables = facility['tables']
 if len(facility_tables) != len(facility_schemas):
     raise ValueError(f'设施设备类表数与新模板不一致: {len(facility_tables)} != {len(facility_schemas)}')
-for table, (name, columns), required in zip(facility_tables[1:], facility_schemas[1:], facility_required[1:]):
+for table, (name, columns), required, field_types in zip(
+    facility_tables[1:],
+    facility_schemas[1:],
+    facility_required[1:],
+    facility_field_types[1:],
+):
     table['name'] = name
     if columns:
         width = len(columns)
         table['columns'] = [column.lstrip('*').strip() for column in columns]
         table['required'] = [index for index, marker in enumerate(required[:width]) if marker is not None]
+        table['fieldTypes'] = field_types[:width]
         table['rows'] = [(row + [''] * width)[:width] for row in table['rows']]
 facility['file'] = FACILITY_TEMPLATE.name
 facility['rowCount'] = sum(len(table['rows']) for table in facility_tables)

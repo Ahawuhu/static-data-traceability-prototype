@@ -18,7 +18,9 @@ function refreshAddInfoButton() {
 function addFieldMarkup(table, column, index) {
   const required = new Set(table.required || []).has(index);
   const marker = required ? '<b class="required-mark">*</b>' : '';
-  const isChoice = column.includes('设备名称') || column.includes('使用状态');
+  const isChoice = (table.fieldTypes && table.fieldTypes[index] === 'radio')
+    || column.includes('设备名称')
+    || column.includes('使用状态');
   if (!isChoice) {
     return `<label>${marker}${esc(column)}<input placeholder="请输入${esc(column)}" data-col="${index}" ${required ? 'data-required="true"' : ''}></label>`;
   }

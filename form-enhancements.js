@@ -15,7 +15,9 @@
     $('#editFields').dataset.row = rowIndex;
     $('#editFields').innerHTML = visible.map(({ column, index }) => {
       const marker = required.has(index) ? '<b class="required-mark">*</b>' : '';
-      const isChoice = column.includes('设备名称') || column.includes('使用状态');
+      const isChoice = (table.fieldTypes && table.fieldTypes[index] === 'radio')
+        || column.includes('设备名称')
+        || column.includes('使用状态');
       if (isChoice) {
         const options = choiceOptions(table, index, column);
         return `<fieldset class="choice-field"><legend>${marker}${esc(column)}</legend><div class="choice-options">${options.map(option => `<label><input type="radio" name="field-${index}" value="${esc(option)}" data-col="${index}" ${String(data[index] || '') === option ? 'checked' : ''}><span>${esc(option)}</span></label>`).join('')}</div></fieldset>`;
